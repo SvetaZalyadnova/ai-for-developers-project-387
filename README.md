@@ -120,17 +120,25 @@ Release Please использует встроенный `GITHUB_TOKEN`: отд�
 
 GitHub не запускает новые `push`/`pull_request` workflows в ответ на действия, выполненные с `GITHUB_TOKEN`. Поэтому workflow проверок не стартует автоматически на release PR; релизный PR нужно проверять отдельно либо настроить иной механизм запуска проверок.
 
-### Claude Code из комментариев GitHub
+### OpenCode из комментариев GitHub
 
-Workflow `.github/workflows/claude.yml` запускает Claude Code, когда в комментарии к issue или pull request (в том числе в inline-комментарии к строке кода) есть `@claude`.
+Это необязательная интеграция для запуска AI-агента из GitHub. Для работы самого приложения, локального запуска и проверок проекта Anthropic API key не нужен. Если ключ получить не удаётся, пропустите этот раздел и не запускайте команды `/opencode` или `/oc`.
 
-Для настройки:
+Если интеграция нужна, workflow `.github/workflows/opencode.yml` запускает OpenCode по команде `/opencode` или `/oc` в новом комментарии к issue или pull request, включая inline-комментарии к строкам diff. Результат появится в обсуждении и в журнале запуска GitHub Actions.
 
-1. Отдельная [Claude GitHub App](https://github.com/apps/claude) не требуется: workflow передает action встроенный `GITHUB_TOKEN` с правами, указанными в файле workflow.
-2. В [настройках Actions secrets](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/settings/secrets/actions) добавьте **один** секрет для аутентификации: `ANTHROPIC_API_KEY` (API key из Claude Console) или `CLAUDE_CODE_OAUTH_TOKEN` (токен Claude Code, созданный командой `claude setup-token`). Не публикуйте ключи в комментариях или в репозитории.
-3. Упомяните `@claude` в комментарии к issue или pull request.
+Настройка необязательной интеграции:
 
-Workflow предоставляет action права на изменение содержимого репозитория и комментарии. Используйте вызов только для доверенных задач; применение Claude может расходовать средства или лимиты соответствующей учетной записи.
+1. GitHub App устанавливать не нужно: workflow использует встроенный `GITHUB_TOKEN`. Убедитесь, что политика организации и настройка Actions в репозитории разрешают workflow-токену запись.
+2. В [Actions secrets](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/settings/secrets/actions) добавьте `ANTHROPIC_API_KEY` из Claude Console. Workflow использует модель `anthropic/claude-sonnet-5-5`; ключ передаётся только как секрет, не добавляйте его в файлы или комментарии.
+3. Напишите `/oc запусти скилл to-spec по обсуждению этого issue` или `/opencode` с другой задачей. Проектные скиллы находятся в `.agents/skills/` и доступны на чистом раннере вместе с `AGENTS.md` и настройками трекера из `docs/agents/`.
+
+Скиллы `to-spec`, `to-tickets` и `implement-spec`, а также необходимые им `tdd` и `code-review`, взяты из [mattpocock/skills](https://github.com/mattpocock/skills) и распространяются по MIT; текст лицензии сохранён в `.agents/skills/LICENSE`.
+
+Workflow принимает только новые комментарии (`types: [created]`) от владельца, участника или collaborator; комментарии ботов и остальных авторов отсекаются до вызова модели. Fork PR не запускаются автоматически, `pull_request_target` не используется. Для работы без App workflow выдаёт `GITHUB_TOKEN` права `contents: write`, `pull-requests: write` и `issues: write`; checkout сохраняет токен для Git push, а Git identity задаётся явно. Запуск ограничен 30 минутами и сериализован по номеру issue или PR.
+
+В `opencode.json` установлено `share: "auto"`: сессии OpenCode автоматически публикуются по ссылке и могут содержать контекст issue. Запуск модели может расходовать токены; при необходимости задайте бюджет у провайдера и остановите или отключите workflow в GitHub Actions.
+
+GitHub не запускает новые `push`/`pull_request` workflows в ответ на действия, выполненные с `GITHUB_TOKEN`; поэтому CI для ветки или PR, созданных OpenCode, может не стартовать автоматически.
 
 ### Проверка в браузере (локально или в Codespaces)
 

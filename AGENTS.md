@@ -23,6 +23,8 @@
 
 ## Agent skills
 
+OpenCode загружает project skills из `.agents/skills/`; они хранятся в репозитории и доступны на чистом GitHub Actions runner.
+
 ### Issue tracker
 Задачи и спецификации ведутся в GitHub Issues этого репозитория через `gh`. См. `docs/agents/issue-tracker.md`.
 
