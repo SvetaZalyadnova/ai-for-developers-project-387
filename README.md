@@ -120,6 +120,18 @@ Release Please использует встроенный `GITHUB_TOKEN`: отд�
 
 GitHub не запускает новые `push`/`pull_request` workflows в ответ на действия, выполненные с `GITHUB_TOKEN`. Поэтому workflow проверок не стартует автоматически на release PR; релизный PR нужно проверять отдельно либо настроить иной механизм запуска проверок.
 
+### Claude Code из комментариев GitHub
+
+Workflow `.github/workflows/claude.yml` запускает Claude Code, когда в комментарии к issue или pull request (в том числе в inline-комментарии к строке кода) есть `@claude`.
+
+Для настройки:
+
+1. Отдельная [Claude GitHub App](https://github.com/apps/claude) не требуется: workflow передает action встроенный `GITHUB_TOKEN` с правами, указанными в файле workflow.
+2. В [настройках Actions secrets](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/settings/secrets/actions) добавьте **один** секрет для аутентификации: `ANTHROPIC_API_KEY` (API key из Claude Console) или `CLAUDE_CODE_OAUTH_TOKEN` (токен Claude Code, созданный командой `claude setup-token`). Не публикуйте ключи в комментариях или в репозитории.
+3. Упомяните `@claude` в комментарии к issue или pull request.
+
+Workflow предоставляет action права на изменение содержимого репозитория и комментарии. Используйте вызов только для доверенных задач; применение Claude может расходовать средства или лимиты соответствующей учетной записи.
+
 ### Проверка в браузере (локально или в Codespaces)
 
 Запустите backend в первом терминале:
