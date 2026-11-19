@@ -15,7 +15,14 @@ The issue tracker and triage label vocabulary should have been provided to you. 
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Ensure the spec reflects the originating issue and the full discussion, including agreed decisions. Include a link to the source issue and cover:
+   - The primary user scenario
+   - A negative scenario
+   - A neighboring scenario whose existing behavior must remain unchanged
+
+   If the change affects the API, preserve the repository's contract-first TypeSpec → OpenAPI → generated SDK → server → frontend sequence.
+
+4. Write the spec using the template below, then publish it to the project issue tracker. Link the source issue from the spec and link the spec from the source issue. Apply the `ready-for-agent` label when creating the spec issue so automated incoming-issue triage skips it.
 
 <spec-template>
 

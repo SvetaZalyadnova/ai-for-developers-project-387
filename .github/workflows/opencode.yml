@@ -1,12 +1,57 @@
 name: OpenCode
 
 on:
+  issues:
+    types: [opened]
   issue_comment:
     types: [created]
   pull_request_review_comment:
     types: [created]
 
 jobs:
+  issue-triage:
+    if: |
+      github.event_name == 'issues' &&
+      github.event.action == 'opened' &&
+      github.event.issue.user.type != 'Bot' &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.issue.author_association) &&
+      !contains(github.event.issue.labels.*.name, 'ready-for-agent')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: opencode-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Run issue triage
+        uses: anomalyco/opencode/github@latest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          model: anthropic/claude-sonnet-5-5
+          use_github_token: true
+          prompt: |
+            Triage this newly opened calendar issue. Read the issue and all its
+            comments, then inspect the repository to understand what the app
+            already does before replying.
+
+            Summarize the user's need in their terms and the relevant existing
+            behavior. If important behavior is unspecified, ask focused questions
+            in an issue comment and apply the needs-info label. If the request is
+            clear enough for maintainer evaluation, apply needs-triage instead.
+
+            Do not change code, create a specification or tickets, or start
+            implementation. Issues labelled ready-for-agent are already prepared
+            and must not be triaged again.
   opencode:
     if: |
       github.event.comment.user.type != 'Bot' &&
