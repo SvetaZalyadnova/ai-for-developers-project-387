@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/compare/v1.0.0...v1.0.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* корректное имя модели OpenCode ([#1](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/issues/1)) ([c4c5bda](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/commit/c4c5bdaec9ce9f36919a9eca5f4d6dbe3713787e))
+* указать провайдера модели OpenCode ([#1](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/issues/1)) ([09e0abd](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/commit/09e0abd311bf01f617ad95de58fe52e0e256d054))
+* указать провайдера модели OpenCode ([#1](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/issues/1)) ([0d4ef74](https://github.com/SvetaZalyadnova/ai-for-developers-project-387/commit/0d4ef74794e58a9ca888c7e20f9eb7a1105218ad))
+
 ## 1.0.0 (2026-11-10)
 
 
